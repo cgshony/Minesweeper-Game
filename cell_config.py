@@ -24,8 +24,8 @@ class Cell:
     def create_button_obj(self, location):
         button = Button( #add formula to rescale
             location,
-            width=12,
-            height=4,
+            width=12//2,
+            height=4//2,
         )
         button.bind('<Button-1>', self.left_click_actions ) ##left click, pass ref from the method
         button.bind('<Button-3>', self.right_click_actions )#right click, pass ref from the method
@@ -92,24 +92,20 @@ class Cell:
         return counter
 
     def show_cell(self):
-        if not self.is_opened:
-            Cell.cell_count -= 1
-            self.cell_button_object.configure(text=self.surrounding_cells_mines_count)
-            #replace text of cell count lbl with new count
-            if Cell.cell_count_label_obj:
-                Cell.cell_count_label_obj.configure(text=f"Ramaining calles: {Cell.cell_count}")
-
-            #if it's a potential mine, config the bg colour to default
-            self.cell_button_object.configure(bg='SystemButtonFace')
-
-        self.is_opened = True #mark cell as opened
+        if self.cell_button_object:
+            if not self.is_opened:
+                Cell.cell_count -= 1
+                self.cell_button_object.configure(text=self.surrounding_cells_mines_count)
+                if Cell.cell_count_label_obj:
+                    Cell.cell_count_label_obj.configure(text=f"Remaining cells: {Cell.cell_count}")
+                self.cell_button_object.configure(bg='SystemButtonFace')
+            self.is_opened = True
 
     def show_mine(self):
-        #logic to interrupt the game and display a message the player lost
-        self.cell_button_object.configure(bg='red')
-        ctypes.windll.user32.MessageBoxW(0, 'You ckicked on a mine.', 'Game Over', 0) #2
+        if self.cell_button_object:
+            self.cell_button_object.configure(bg='red')
+        ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine.', 'Game Over', 0)
         sys.exit()
-
 
     def right_click_actions(self, event):
         if not self.is_potential_mine:
