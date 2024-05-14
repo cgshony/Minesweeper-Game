@@ -1,6 +1,19 @@
 from tkinter import *
+from tkinter import OptionMenu, StringVar
 from cell_config import Cell
 import settings
+
+def set_difficulty(difficulty):
+    print("Selected difficulty:", difficulty)
+
+def create_difficulty_buttons(root):
+    difficulties = ["Easy", "Medium", "Hard"]
+    button_frame = Frame(root, bg='black')
+    button_frame.place(x=0, y=settings.height_percentage(25))
+
+    for idx, difficulty in enumerate(difficulties):
+        button = Button(button_frame, text=difficulty, command=lambda d=difficulty: set_difficulty(d))
+        button.grid(row=0, column=idx, padx=10)
 
 root = Tk() #creates a window
 #override settings of the window
@@ -9,11 +22,14 @@ root.geometry(f'{settings.WIDTH}x{settings.HEIGHT}')
 root.title('Minesweeper Game')
 root.resizable(False, False) #not allowed to resize wind
 
+"""--------Difficulty"""
+# Define difficulty levels
+
 top_frame = Frame(
     root,
     bg='black', #change later to black
-    width = settings.WIDTH,
-    height= settings.height_percentage(25)
+    width=settings.WIDTH,
+    height=settings.height_percentage(25)
 )
 top_frame.place(x=0, y=0)
 
@@ -29,38 +45,36 @@ game_title.place(x=settings.width_percentage(25), y=0)
 left_frame = Frame(
     root,
     bg='black', #change later to black
-    width = settings.width_percentage(25),
-    height= settings.height_percentage(75)
+    width=settings.width_percentage(25),
+    height=settings.height_percentage(75)
 )
 left_frame.place(x=0, y=settings.height_percentage(25))
+create_difficulty_buttons(left_frame)  # Call the function here
 
 center_frame = Frame(
     root,
     bg='black', #change later to black
-    width = settings.width_percentage(75),
-    height= settings.height_percentage(75)
+    width=settings.width_percentage(75),
+    height=settings.height_percentage(75)
 )
 center_frame.place(
     x=settings.width_percentage(25),
     y=settings.height_percentage(25)
 )
 
-# c1 = Cell()
-# c1.create_button_obj(center_frame)
-# c1.cell_button_object.grid(column=0, row=0)
-
+# Generate cells and randomize mines
 for x in range(settings.GRID_SIZE):
     for y in range(settings.GRID_SIZE):
         c = Cell(x, y)
         c.create_button_obj(center_frame)
-        c.cell_button_object.grid (column=x, row=y)
+        c.cell_button_object.grid(column=x, row=y)
 
-#call the lable from Cell class
+# Create the remaining cells count label
 Cell.create_cell_count_label(left_frame)
 Cell.cell_count_label_obj.place(x=0, y=0)
 
+# Randomize mines after creating the cells and labels
 Cell.randomize_mines()
 
-
-#run the window
+# Run the window
 root.mainloop()
