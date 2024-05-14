@@ -34,9 +34,11 @@ class Cell:
         label = Label(
             location,
             text=f"Remaining cells: {Cell.cell_count}",
-            width=30,
-            height=3,  # Increased height to provide more space
+            width=25,
+            height=5,  # Increased height to provide more space
             font=('', 20),  # Adjusted font size
+            anchor='w',  # Ensure the text remains left-aligned
+            justify='left',  # Ensure the text remains left-aligned
             bg='black',
             fg='white'
         )

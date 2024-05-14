@@ -21,7 +21,7 @@ def set_difficulty(difficulty):
             cell.cell_button_object.destroy()
     Cell.all.clear()
 
-    Cell.cell_count = settings.GRID_SIZE ** 2 - settings.MINES_COUNT
+    Cell.cell_count = settings.GRID_SIZE * settings.GRID_SIZE  # Update cell count based on grid size
 
     center_frame.destroy()
     center_frame = Frame(
@@ -45,7 +45,7 @@ def set_difficulty(difficulty):
         text=f"Remaining cells: {Cell.cell_count}",
         width=30,
         height=5,
-        font=('', 24)
+        font=('', 15)
     )
     Cell.randomize_mines()
 
