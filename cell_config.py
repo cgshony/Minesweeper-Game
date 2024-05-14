@@ -2,12 +2,11 @@ import sys
 from tkinter import Button, Label
 import random
 import settings
-import ctypes #generate warings, errors
-import sys
+import ctypes
 
 class Cell:
     all = []
-    cell_count = settings.CELLS_COUNT
+    cell_count = settings.GRID_SIZE ** 2
     cell_count_label_obj = None
 
     def __init__(self, x, y, is_mine=False):
@@ -15,60 +14,56 @@ class Cell:
         self.is_opened = False
         self.is_potential_mine = False
         self.cell_button_object = None
-        self.x = x #rep cell attrib
+        self.x = x
         self.y = y
 
-        #append the obj to the cell.all list
+        # Append the object to the Cell.all list
         Cell.all.append(self)
 
     def create_button_obj(self, location):
-        button = Button( #add formula to rescale
+        button = Button(
             location,
-            width=12//2,
-            height=4//2,
+            width=12//3,
+            height=4//3,
         )
-        button.bind('<Button-1>', self.left_click_actions ) ##left click, pass ref from the method
-        button.bind('<Button-3>', self.right_click_actions )#right click, pass ref from the method
+        button.bind('<Button-1>', self.left_click_actions)  # Left click
+        button.bind('<Button-3>', self.right_click_actions)  # Right click
         self.cell_button_object = button
-        return button  # Return the button object
+        return button
 
     @staticmethod
     def create_cell_count_label(location):
         label = Label(
             location,
-            text=f"Ramaining calles: {Cell.cell_count}",
+            text=f"Remaining cells: {Cell.cell_count}",
             width=25,
             height=4,
             font=('', 20),
-            bg = 'black',
-            fg = 'white'
+            bg='black',
+            fg='white'
         )
-
         Cell.cell_count_label_obj = label
 
-    def left_click_actions(self, event): #why is it not down the stream?
+    def left_click_actions(self, event):
         if self.is_mine:
             self.show_mine()
         else:
             if self.surrounding_cells_mines_count == 0:
                 for cell_obj in self.surrounding_cells:
-                    cell_obj.show_cell()    #open all the cells
-            self.show_cell() #only ifcnot mine
-        #if mines count = cells left, it's a win
+                    cell_obj.show_cell()
+            self.show_cell()
         if Cell.cell_count == settings.MINES_COUNT:
             ctypes.windll.user32.MessageBoxW(0, 'You won the game!', 0)
 
-        #cancel Left and Right click events if cell is already opened
         self.cell_button_object.unbind('<Button-1>')
         self.cell_button_object.unbind('<Button-3>')
 
-    def get_cell_by_axis(self, x,y):
-        # return cell obj based on the values of x&y
+    def get_cell_by_axis(self, x, y):
         for cell in Cell.all:
             if cell.x == x and cell.y == y:
                 return cell
 
-    @property #use it as an attrib
+    @property
     def surrounding_cells(self):
         cells = [
             self.get_cell_by_axis(self.x - 1, self.y - 1),
@@ -80,25 +75,19 @@ class Cell:
             self.get_cell_by_axis(self.x + 1, self.y + 1),
             self.get_cell_by_axis(self.x, self.y + 1)
         ]
-        cells = [cell for cell in cells if cell is not None]  # list comprehension
-        return cells
+        return [cell for cell in cells if cell is not None]
 
-    @property #read only attrib
+    @property
     def surrounding_cells_mines_count(self):
-        counter = 0
-        for cell in self.surrounding_cells:  # Corrected spelling here
-            if cell.is_mine:
-                counter += 1
-        return counter
+        return sum(1 for cell in self.surrounding_cells if cell.is_mine)
 
     def show_cell(self):
-        if self.cell_button_object:
-            if not self.is_opened:
-                Cell.cell_count -= 1
-                self.cell_button_object.configure(text=self.surrounding_cells_mines_count)
-                if Cell.cell_count_label_obj:
-                    Cell.cell_count_label_obj.configure(text=f"Remaining cells: {Cell.cell_count}")
-                self.cell_button_object.configure(bg='SystemButtonFace')
+        if self.cell_button_object and not self.is_opened:
+            Cell.cell_count -= 1
+            self.cell_button_object.configure(text=self.surrounding_cells_mines_count)
+            if Cell.cell_count_label_obj:
+                Cell.cell_count_label_obj.configure(text=f"Remaining cells: {Cell.cell_count}")
+            self.cell_button_object.configure(bg='SystemButtonFace')
             self.is_opened = True
 
     def show_mine(self):

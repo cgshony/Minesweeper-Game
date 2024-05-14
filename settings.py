@@ -1,20 +1,23 @@
-WIDTH = 1440
-HEIGHT = 720
-GRID_SIZE = 6
-CELLS_COUNT = GRID_SIZE ** 2
-MINES_COUNT = CELLS_COUNT // 4
-
-class DifficultyLevel:
-    def __init__(self, name, grid_size):
-        self.name = name
+class Difficulty:
+    def __init__(self, grid_size, mines_count):
         self.grid_size = grid_size
+        self.mines_count = mines_count
 
-EASY = DifficultyLevel("Easy", 6)
-MEDIUM = DifficultyLevel("Medium", 8)
-HARD = DifficultyLevel("Hard", 10)
+EASY = Difficulty(grid_size=8, mines_count=10)
+MEDIUM = Difficulty(grid_size=16, mines_count=35)
+HARD = Difficulty(grid_size=20, mines_count=50)
+
+# Default difficulty level
+GRID_SIZE = EASY.grid_size
+MINES_COUNT = EASY.mines_count
+
+# Add these functions to calculate width and height percentages
+def width_percentage(percentage):
+    return int(WIDTH * percentage / 100)
 
 def height_percentage(percentage):
-    return (HEIGHT/100) * percentage
+    return int(HEIGHT * percentage / 100)
 
-def width_percentage(percentage):
-    return (WIDTH / 100) * percentage
+# Define the window dimensions
+WIDTH = 1250
+HEIGHT = 800
