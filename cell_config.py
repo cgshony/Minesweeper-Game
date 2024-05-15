@@ -1,3 +1,8 @@
+"""
+This module defines the Cell class used in the Minesweeper game,
+including the methods for cell interactions, mine randomization, and cell count updates.
+"""
+
 from tkinter import Button, Label
 import random
 import ctypes
@@ -5,6 +10,13 @@ import settings
 import sys
 
 class Cell:
+    """
+        Represent a cell in the Minesweeper game.
+        Attributes:
+            x: The x-coordinate of the cell.
+            y: The y-coordinate of the cell.
+            is_mine: Bool whether the cell is a mine.
+        """
     all = []
     cell_count = 0
     cell_count_label_obj = None
@@ -18,11 +30,11 @@ class Cell:
         self.y = y
         Cell.all.append(self)
 
-    def create_button_obj(self, location):
+    def create_button_obj(self, location):  # Creates a button for the cell.
         button = Button(
             location,
-            width=2,  # Adjusted width for better appearance
-            height=1,  # Adjusted height for better appearance
+            width=2,  # Adjust width for better appearance
+            height=1,  # Adjust height
         )
         button.bind('<Button-1>', self.left_click_actions)
         button.bind('<Button-3>', self.right_click_actions)
@@ -30,13 +42,13 @@ class Cell:
         return button
 
     @staticmethod
-    def create_cell_count_label(location):
+    def create_cell_count_label(location): #Create a label to display the remaining cells during gameplay.
         label = Label(
             location,
             text=f"Remaining cells: {Cell.cell_count}",
             width=25,
-            height=5,  # Increased height to provide more space
-            font=('', 20),  # Adjusted font size
+            height=5,
+            font=('', 15),
             anchor='w',  # Ensure the text remains left-aligned
             justify='left',  # Ensure the text remains left-aligned
             bg='black',
@@ -44,7 +56,7 @@ class Cell:
         )
         Cell.cell_count_label_obj = label
 
-    def left_click_actions(self, event):
+    def left_click_actions(self, event):  #Handle left-click actions on the cell.
         if self.is_mine:
             self.show_mine()
         else:
@@ -63,7 +75,7 @@ class Cell:
                 return cell
 
     @property
-    def surrounding_cells(self):
+    def surrounding_cells(self):  #Get the surrounding cells of the current cell.
         cells = [
             self.get_cell_by_axis(self.x - 1, self.y - 1),
             self.get_cell_by_axis(self.x - 1, self.y),
@@ -78,14 +90,14 @@ class Cell:
         return cells
 
     @property
-    def surrounding_cells_mines_count(self):
+    def surrounding_cells_mines_count(self):   #Count the number of mines in the surrounding cells.
         counter = 0
         for cell in self.surrounding_cells:
             if cell.is_mine:
                 counter += 1
         return counter
 
-    def show_cell(self):
+    def show_cell(self):   #Show the cell's content.
         if self.cell_button_object:
             if not self.is_opened:
                 self.is_opened = True
@@ -94,17 +106,17 @@ class Cell:
                 if Cell.cell_count_label_obj:
                     Cell.cell_count_label_obj.configure(
                         text=f"Remaining cells: {Cell.cell_count}",
-                        font=('', 20)
+                        font=('', 15)
                     )
                 self.cell_button_object.configure(bg='SystemButtonFace')
 
-    def show_mine(self):
+    def show_mine(self):   #Show the mine and end the game.
         if self.cell_button_object:
             self.cell_button_object.configure(bg='red')
         ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine.', 'Game Over', 0)
         sys.exit()
 
-    def right_click_actions(self, event):
+    def right_click_actions(self, event):  # Handle right-click actions on the cell.
         if not self.is_potential_mine:
             self.cell_button_object.configure(bg='orange')
             self.is_potential_mine = True
@@ -113,7 +125,7 @@ class Cell:
             self.is_potential_mine = False
 
     @staticmethod
-    def randomize_mines():
+    def randomize_mines():   # Randomize the mines in the grid.
         picked_cells = random.sample(Cell.all, settings.MINES_COUNT)
         for picked_cell in picked_cells:
             picked_cell.is_mine = True
