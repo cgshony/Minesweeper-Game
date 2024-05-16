@@ -12,7 +12,7 @@ cell_config.py: Defines the behavior and interactions of each cell in the game.
 settings.py: Configures the game settings and difficulty levels.
 
 # How to Play
-Run the game using the instructions above.
+Run the game.
 Select the difficulty level (Easy, Medium, Hard) by clicking on the respective buttons.
 The grid will be generated based on the selected difficulty.
 Left-click to reveal a cell. If it's a mine, you lose. If it's not, it will show the number of surrounding mines.
