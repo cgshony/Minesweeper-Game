@@ -19,6 +19,11 @@ Left-click to reveal a cell. If it's a mine, you lose. If it's not, it will show
 Right-click to flag or unflag a potential mine.
 The game ends when all non-mine cells are revealed or a mine is clicked.
 
+<img width="705" alt="image" src="https://github.com/cgshony/Minesweeper-Game/assets/129407856/71abac1c-a7c1-4193-bc29-0f2a3ec22d3f">
+<img width="700" alt="image" src="https://github.com/cgshony/Minesweeper-Game/assets/129407856/ca7fc156-002c-4cbd-b10e-5bd6996b5e78">
+<img width="683" alt="image" src="https://github.com/cgshony/Minesweeper-Game/assets/129407856/b949cc97-c30b-41f3-b6bc-2b7dc4006ea1">
+
+
 
 Acknowledgements: 
 Base idea for the game was from @jimshapedcoding. Features, difficulty levels, improved game logic, UX and error handling were implemented to enhance it.
